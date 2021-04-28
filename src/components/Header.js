@@ -10,6 +10,8 @@ import { actionCreators as userActions } from "../redux/modules/user";
 import { history } from "../redux/configureStore";
 import { apiKey } from "../shared/Firebase";
 
+import NotiBadge from "./NotiBadge";
+
 const Header = (props) => {
     const dispatch = useDispatch();
     const is_login = useSelector((state) => state.user.is_login)? true : false;
@@ -18,29 +20,31 @@ const Header = (props) => {
 
     const is_session = sessionStorage.getItem(_session_key)? true : false;
 
-    console.log(is_session);
-    console.log(is_login);
+    // console.log(is_session);
+    // console.log(is_login);
 
     if(is_login && is_session) {
         return (
             <Permit>
                 <React.Fragment>
                     <Grid is_flex padding="4px 16px">
-                        <Grid>
-                            <Text margin="0px" size="24px" bold>헬로</Text>
+                        <Grid is_flex>
+                            <Text margin="5px 0px 0px 0px" size="26px" bold _onClick={() => {history.push('/')}}>⋰</Text>
+                            <Text margin="3px 50px 0px 0px" size="26px" bold _onClick={() => {history.push('/')}}>SURGO</Text>
                         </Grid>
 
                         <Grid is_flex>
+                            <Button bg="#D5D5D5"
+                                    color="#212121"
+                            >
+                                <NotiBadge _onClick={() => {
+                                    history.push("/noti");
+                                }}
+                                />
+                            </Button>
                             <Button text="내 정보"
                                     bg="#8C8C8C"
                                     color="#212121">
-                            </Button>
-                            <Button text="알림"
-                                    bg="#8C8C8C"
-                                    color="#212121"
-                                    _onClick={() => {
-                                        history.push("/noti");
-                                    }}>
                             </Button>
                             <Button text="로그아웃"
                                 _onClick={() => {
@@ -56,8 +60,9 @@ const Header = (props) => {
     return (
         <React.Fragment>
             <Grid is_flex padding="4px 16px">
-                <Grid>
-                    <Text margin="0px" size="24px" bold>헬로</Text>
+                <Grid is_flex>
+                    <Text margin="5px 0px 0px 0px" size="26px" bold _onClick={() => {history.push('/')}}>⋰</Text>
+                    <Text margin="3px 50px 0px 0px" size="26px" bold _onClick={() => {history.push('/')}}>SURGO</Text>
                 </Grid>
 
                 <Grid is_flex>

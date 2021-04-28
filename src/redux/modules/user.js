@@ -1,6 +1,7 @@
 // Action, Reducer 편하게 만들기
 import { createAction, handleActions, handleAction } from "redux-actions";
 import { produce } from "immer";
+import { realtime } from "../../shared/Firebase";
 
 import { getCookie, setCookie, deleteCookie} from "../../shared/Cookie";
 
@@ -31,19 +32,18 @@ const user_initial = {
 // middleware actions
 const loginFB = (id, pwd) => {
     return function (dispatch, getState, {history}) {
-        
+
         auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).then((res) => {
             auth
             .signInWithEmailAndPassword(id, pwd)
             .then((user) => {
-            console.log(user);
-
-            dispatch(setUser({ user_name: user.user.displayName, 
+            // console.log(user);
+            
+            dispatch(setUser({ user_name: user.user.displayName,
                                id: id,
                                user_profile: "",
                                uid: user.user.uid,
             }));
-            
             history.push("/");
             // Signed in
             // ...
@@ -52,6 +52,7 @@ const loginFB = (id, pwd) => {
             var errorCode = error.code;
             var errorMessage = error.message;
 
+            window.alert("틀린 비밀번호입니다. 다시 한 번 확인해주세요.")
             console.log(errorCode, errorMessage);
             });
         })
@@ -75,7 +76,10 @@ const signupFB = (id, pwd, user_name) => {
                                 user_profile: "",
                                 uid: user.user.uid,
             }));
-            history.push('/');
+            // const loginNoti = realtime.ref(`noti/${user.user.uid}`);
+            // loginNoti.push();
+            // loginNoti.update({read: false});
+            window.alert("회원가입이 성공적으로 완료되었습니다.")
         })
         .catch((error) => {
             console.log(error);
@@ -87,6 +91,7 @@ const signupFB = (id, pwd, user_name) => {
         var errorCode = error.code;
         var errorMessage = error.message;
         
+        window.alert("이미 존재하는 아이디입니다. 다시 입력해주세요.")
         console.log(errorCode, errorMessage);
         // ..
         });   

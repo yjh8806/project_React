@@ -203,6 +203,32 @@ const getPostFB = (start = null, size = 3) => {
     }
 }
 
+const getOnePostFB = (id) => {
+    return function(dispatch, getState, {history}){
+        const postDB = firestore.collection("post")
+        postDB.doc(id).get().then(doc => {
+            // console.log(doc);
+            // console.log(doc.data);
+            
+            let _post = doc.data();
+            let post = Object.keys(_post).reduce(
+                (acc, cur) => {
+                    if(cur.indexOf("user_") !== -1) {
+                        return {
+                            ...acc, 
+                            user_info: {...acc.user_info, [cur]: _post[cur] },
+                        };
+                    } 
+                    return { ...acc, [cur]: _post[cur] };
+
+                }, { id: doc.id, user_info: {} }
+            );
+            // []로 배열안에 넣어주기
+            dispatch(setPost([post]));
+        })
+    }
+}
+
 // const deletePostFB = (post_id = null) => {
 //     return function (dispatch, getState, {history}) {
 //         const postDB = firestore.collection("post");
@@ -224,7 +250,20 @@ export default handleActions(
     {
         [SET_POST]: (state, action) => produce(state, (draft) => {
             draft.list.push(...action.payload.post_list);
-            draft.paging = action.payload.paging;
+            // list 중복제거
+            draft.list = draft.list.reduce((acc, cur) => {
+                if(acc.findIndex(a => a.id === cur.id) === -1){
+                    return [...acc, cur];
+                }else{
+                    acc[acc.findIndex(a => a.id === cur.id)] = cur;
+                    return acc;
+                }
+            }, []);
+
+            if(action.payload.paging){
+                draft.paging = action.payload.paging;
+            }
+
             draft.is_loading = false;
         }),
         [ADD_POST]: (state, action) => produce(state, (draft) => {
@@ -252,6 +291,7 @@ const actionCreators = {
     getPostFB,
     addPostFB,
     editPostFB,
+    getOnePostFB,
     // deletePostFB,
 }
 

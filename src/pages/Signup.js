@@ -7,7 +7,7 @@ import { emailCheck } from "../shared/common";
 
 const Signup = (props) => {
     const dispatch = useDispatch();
-
+    
     const [id, setId] = React.useState('');
     const [pwd, setPwd] = React.useState('');
     const [pwd_check, setPwdCheck] = React.useState('');
@@ -21,7 +21,12 @@ const Signup = (props) => {
         }
 
         if(!emailCheck(id)) {
-            window.alert("아이디 형식이 맞지 않습니다. 다시 입력해주세요.")
+            window.alert("아이디(이메일) 형식이 맞지 않습니다. 다시 입력해주세요.")
+            return;
+        }
+
+        if(pwd.length < 6){
+            window.alert("비밀번호는 6자리 이상만 설정 가능합니다. 다시 설정해주세요.")
             return;
         }
 
@@ -31,6 +36,7 @@ const Signup = (props) => {
         }
 
         dispatch(userActions.signupFB(id, pwd, user_name));
+
     }
     return (
         <React.Fragment>
@@ -72,7 +78,11 @@ const Signup = (props) => {
                         placeholder="비밀번호를 다시 입력하세요. (6자 이상)"
                         _onChange={(e)=>{
                             setPwdCheck(e.target.value);
-                        }}/>
+                        }}
+                        value={pwd_check}
+                        is_submit
+                        onSubmit={signup}
+                        />
                 </Grid>
                 
                 <Button text="회원가입하기" _onClick=

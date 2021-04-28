@@ -3,9 +3,12 @@ import {Text, Input, Grid, Button} from "../elements";
 import { getCookie, setCookie, deleteCookie } from "../shared/Cookie";
 import { emailCheck } from "../shared/common";
 
+import {realtime} from "../shared/Firebase";
+
 // Action 불러와 쓰기!
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {actionCreators as userActions} from "../redux/modules/user";
+
 
 const Login = (props) => {
     const dispatch = useDispatch();
@@ -25,7 +28,7 @@ const Login = (props) => {
             window.alert("이메일 형식이 맞지 않습니다. 다시 입력해주세요.")
             return;
         }
-
+        
         dispatch(userActions.loginFB(id, pwd));
     }
 
@@ -50,6 +53,9 @@ const Login = (props) => {
                         _onChange = {(e) => {
                             setPwd(e.target.value);
                         }}
+                        value={pwd}
+                        is_submit
+                        onSubmit={login}
                     />
                 </Grid>
                 <Button setCookie

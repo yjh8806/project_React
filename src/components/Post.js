@@ -45,6 +45,7 @@ Post.defaultProps = {
     comment_cnt: 10,
     insert_dt: "2021-03-29 22:54:28",
     is_me: false,
+    loading: true,
 };
 
 export default Post;

@@ -1,6 +1,8 @@
 {
   "rules": {
-    ".read": true,
-    ".write": true
+    "noti": {
+      ".read": true,
+      ".write": true
+    }
   }
 }

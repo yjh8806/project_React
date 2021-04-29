@@ -8,6 +8,7 @@ import {realtime} from "../shared/Firebase";
 // Action 불러와 쓰기!
 import {useDispatch, useSelector} from "react-redux";
 import {actionCreators as userActions} from "../redux/modules/user";
+import {actionCreators as postActions} from "../redux/modules/post";
 
 
 const Login = (props) => {

@@ -20,6 +20,7 @@ const PostList = (props) => {
         if(post_list.length < 2) {
             dispatch(postActions.getPostFB());
         }
+
     }, []);
 
     return (
@@ -33,6 +34,7 @@ const PostList = (props) => {
                     is_next={paging.next ? true : false}
                     loading={is_loading}
                     >
+
                     {post_list.map((p, idx) => {
                         if(p.user_info.user_id === user_info?.uid) {
                             return (

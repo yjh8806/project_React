@@ -213,11 +213,9 @@ const getOnePostFB = (id) => {
             
             let _post = doc.data();
             let post = Object.keys(_post).reduce(
-                (acc, cur) => {
+                (acc,cur) => {
                     if(cur.indexOf("user_") !== -1) {
-                        return {
-                            ...acc, 
-                            user_info: {...acc.user_info, [cur]: _post[cur] },
+                        return { ...acc, user_info: {...acc.user_info, [cur]: _post[cur] },
                         };
                     } 
                     return { ...acc, [cur]: _post[cur] };

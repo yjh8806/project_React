@@ -48,11 +48,12 @@ const PostWrite = (props) => {
 
     if(!is_login) {
         return (
-            <Grid margin="100px 0px" padding="16px" center>
+            <Grid margin="250px 0px 100px 0px" padding="16px" center>
                 <Text size="32px" bold>앗, 잠깐!</Text>
-                <Text size="16px">로그인 후에만 글을 쓸 수 있어요!</Text>
+                <Text size="16px" margin="0px 0px 8px 0px">로그인 후에만 글을 쓸 수 있어요!</Text>
                 <Button _onClick={() => {history.replace("/login");}}
-                >로그인 하러가기
+                >
+                    <Text bold color="#ffffff" size="16px">로그인</Text>
                 </Button>
             </Grid>
         )

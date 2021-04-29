@@ -76,9 +76,10 @@ const signupFB = (id, pwd, user_name) => {
                                 user_profile: "",
                                 uid: user.user.uid,
             }));
-            // const loginNoti = realtime.ref(`noti/${user.user.uid}`);
-            // loginNoti.push();
-            // loginNoti.update({read: false});
+            const loginNoti = realtime.ref(`noti/${user.user.uid}`);
+            loginNoti.push();
+            loginNoti.update({read: false});
+            history.push('/');
             window.alert("회원가입이 성공적으로 완료되었습니다.")
         })
         .catch((error) => {

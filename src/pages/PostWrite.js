@@ -61,7 +61,7 @@ const PostWrite = (props) => {
     return (
         <React.Fragment>
             <Grid padding="16px">
-                <Text size="36px" bold>
+                <Text size="32px" bold>
                     {is_edit ? "게시글 수정" : "게시글 작성"}
                 </Text>
                 <Upload/>

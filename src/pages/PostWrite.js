@@ -5,6 +5,7 @@ import Upload from "../shared/Upload";
 import {useSelector, useDispatch} from "react-redux";
 import {actionCreators as postActions} from "../redux/modules/post";
 import {actionCreators as imageActions} from "../redux/modules/image";
+import comment, {actionCreators as commentActions} from "../redux/modules/comment";
 
 const PostWrite = (props) => {
     const dispatch = useDispatch();
@@ -44,6 +45,11 @@ const PostWrite = (props) => {
 
     const editPost = () => {
         dispatch(postActions.editPostFB(post_id, {contents: contents}));
+    }
+    
+    const deletePost = () => {
+        // dispatch(commentActions.deleteCommentFB(post_id));
+        dispatch(postActions.deletePostFB(post_id));
     }
 
     if(!is_login) {
@@ -90,6 +96,11 @@ const PostWrite = (props) => {
                     <Button text="게시글 수정" _onClick={editPost}></Button>
                 ) : (
                     <Button text="게시글 작성" _onClick={addPost}></Button>
+                )}
+                {is_edit ? (
+                    <Button bg="#8C8C8C" text="게시글 삭제" _onClick={deletePost}></Button>
+                ) : (
+                    ""
                 )}
             </Grid>
         </React.Fragment>

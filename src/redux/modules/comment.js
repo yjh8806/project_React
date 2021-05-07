@@ -9,11 +9,12 @@ import {actionCreators as postActions} from "./post";
 
 const SET_COMMENT = "SET_COMMENT";
 const ADD_COMMENT = "ADD_COMMENT";
-
+const DELETE_COMMENT = "DELETE_COMMENT";
 const LOADING = "LOADING";
 
 const setComment = createAction(SET_COMMENT, (post_id, comment_list) => ({post_id, comment_list}));
 const addComment = createAction(ADD_COMMENT, (post_id, comment) => ({post_id, comment}));
+const deleteComment = createAction(DELETE_COMMENT, (post_id, comment) => ({post_id, comment}));
 
 const loading = createAction(LOADING, (is_loading) => ({ is_loading }));
 
@@ -35,6 +36,7 @@ const addCommentFB = (post_id, contents) => {
       contents: contents,
       insert_dt: moment().format("YYYY-MM-DD hh:mm:ss"),
     }
+    console.log(commentDB);
 
     commentDB
       .add(comment)
@@ -80,7 +82,6 @@ const addCommentFB = (post_id, contents) => {
   }
 }
 
-
 const getCommentFB = (post_id = null) => {
   return function(dispatch, getState, {history}){
     if(!post_id){
@@ -105,20 +106,40 @@ const getCommentFB = (post_id = null) => {
       });
   };
 };
+const deleteCommentFB = (post_id, comment) => {
+  return function (dispatch, getState, {history}) {
+    const commentDB = firestore.collection("comment");
 
+    const _post_idx = getState().post.list.findIndex((p) => p.id === post_id);
+    const _post = getState().post.list[_post_idx];
+    const _comment_id = commentDB.id;
+
+    commentDB.doc(comment).delete().then((doc) => {
+      // console.log("Document successfully deleted!");
+        dispatch(deleteComment(post_id));
+      }).catch((error) => {
+          console.error("Error removing document: ", error);
+      });
+  }
+}
 // Reducer
 export default handleActions(
   {
       [SET_COMMENT]: (state, action) => produce(state, (draft) => {
         draft.list[action.payload.post_id] = action.payload.comment_list;
       }),
-      [ADD_COMMENT]: (state, action) => produce(state, (draft)=> {
+      [ADD_COMMENT]: (state, action) => produce(state, (draft) => {
         draft.list[action.payload.post_id].unshift(action.payload.comment);
       }),
-      [LOADING]: (state, action) => 
-      produce(state, (draft) => {
+      [DELETE_COMMENT]: (state, action) => produce(state, (draft) => {
+        // const _post_idx = draft.list.findIndex((p) => p.id === action.payload.post_id);
+        // const _post = draft.list[_post_idx];
+        
+        draft.list.splice(0);
+      }),
+      [LOADING]: (state, action) => produce(state, (draft) => {
         draft.is_loading = action.payload.is_loading;
-      })
+      }),
   },
   initialState
 );
@@ -126,6 +147,7 @@ export default handleActions(
 const actionCreators = {
   getCommentFB,
   addCommentFB,
+  deleteCommentFB,
   setComment,
   addComment,
 };

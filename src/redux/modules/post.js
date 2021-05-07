@@ -5,18 +5,20 @@ import { firestore,storage } from "../../shared/Firebase";
 import moment from "moment";
 
 import { actionCreators as imageActions } from "./image";
+import { actionCreators as commentActions } from "./comment";
 
 const SET_POST = "SET_POST";
 const ADD_POST = "ADD_POST";
 const EDIT_POST = "EDIT_POST";
+const DELETE_POST = "DELETE_POST";
 const LOADING = "LOADING";
-// const DELETE_POST = "DELETE_POST";
 
 const setPost = createAction(SET_POST, (post_list, paging) => ({ post_list, paging }));
 const addPost = createAction(ADD_POST, (post) => ({post}));
 const editPost = createAction(EDIT_POST, (post_id, post) => ({post_id, post}));
+const deletePost = createAction(DELETE_POST, (post_id) => ({post_id}));
 const loading = createAction(LOADING, (is_loading) => ({ is_loading }));
-// const deletePost = createAction(DELETE_POST, (post) => ({post}));
+
 
 const initialState = {
     list: [],
@@ -228,21 +230,22 @@ const getOnePostFB = (id) => {
     }
 }
 
-// const deletePostFB = (post_id = null) => {
-//     return function (dispatch, getState, {history}) {
-//         const postDB = firestore.collection("post");
+const deletePostFB = (post_id) => {
+    return function (dispatch, getState, {history}) {
+        const postDB = firestore.collection("post");
+        const _post_idx = getState().post.list.findIndex((p) => p.id === post_id);
+        const _post = getState().post.list[_post_idx];
 
-//         const _post_idx = getState().post.list.findIndex((p) => p.id === post_id);
-//         const _post = getState().post.list[_post_idx];
-
-//         postDB.doc(post_id).delete().then(() => {
-//             console.log("Document successfully deleted!");
-//         }).catch((error) => {
-//             console.error("Error removing document: ", error);      
-//     });
-//     }
-    
-// }
+        postDB.doc(post_id).delete().then(() => {
+            // console.log("Document successfully deleted!");
+            dispatch(deletePost(post_id));
+            window.alert("게시글 삭제가 완료되었습니다.")
+            history.replace("/");
+        }).catch((error) => {
+            console.error("Error removing document: ", error);
+        });
+    };
+};
 
 // Reducer
 export default handleActions(
@@ -276,10 +279,12 @@ export default handleActions(
         [LOADING]: (state, action) => produce(state, (draft) => {
             draft.is_loading = action.payload.is_loading;
         }),
-        // [DELETE_POST]: (state, action) => produce(state, (draft) => {
-        //     draft.list.
-        // }),
+        [DELETE_POST]: (state, action) => produce(state, (draft) => {
+            const _post_idx = draft.list.findIndex((p) => p.id === action.payload.post_id);
+            // const _post = draft.list[_post_idx];
 
+            draft.list.splice(_post_idx, 1);
+        })
     }, initialState
 );
 
@@ -291,7 +296,7 @@ const actionCreators = {
     addPostFB,
     editPostFB,
     getOnePostFB,
-    // deletePostFB,
+    deletePostFB,
 }
 
 export {actionCreators};

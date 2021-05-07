@@ -3,8 +3,9 @@ import {Grid, Image, Text, Button} from "../elements";
 
 import {history} from "../redux/configureStore";
 
-const Post = (props) => {
+const Post = React.memo((props) => {
 
+    // console.log('hi! im post component!');
     return (
         <React.Fragment>
             <Grid is_flex padding="16px">
@@ -17,9 +18,6 @@ const Post = (props) => {
                     {props.is_me && <Button width="auto" height= "30px" padding="4px" margin="0px 0px 0px 0px" _onClick={() => {
                         history.push(`/write/${props.id}`);
                     }}>수정</Button>}
-                    {props.is_me && <Button width="auto" height= "30px" padding="4px" margin="0px 0px 0px 1px" _onClick={() => {
-                        history.push(`/write/${props.id}`);
-                    }}>삭제</Button>}
                 </Grid>
             </Grid>    
             <Grid padding="16px">
@@ -33,7 +31,7 @@ const Post = (props) => {
             </Grid>
         </React.Fragment>
     )
-}
+});
 // 필요한 props들을 미리 옮겨놓는 방식
 Post.defaultProps = {
     user_info : {

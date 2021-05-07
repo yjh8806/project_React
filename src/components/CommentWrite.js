@@ -3,6 +3,7 @@ import { Grid, Input, Button } from "../elements";
 
 import {actionCreators as commentActions} from "../redux/modules/comment";
 import {useDispatch, useSelector} from "react-redux";
+import {firestore} from "../shared/Firebase";
 
 const CommentWrite = (props) => {
     const dispatch = useDispatch();
@@ -21,6 +22,8 @@ const CommentWrite = (props) => {
         }
         dispatch(commentActions.addCommentFB(post_id, comment_text));
         setCommentText("");
+        // console.log(comment_text);
+        // console.log(firestore.collection("comment").id);
     }
 
     return (

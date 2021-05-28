@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Grid, Text, Button, Image, Input} from "../elements"
 import Upload from "../shared/Upload";
 
@@ -9,15 +9,19 @@ import comment, {actionCreators as commentActions} from "../redux/modules/commen
 
 const PostWrite = (props) => {
     const dispatch = useDispatch();
+    const post_id = props.match.params.id;
+
+    const is_edit = post_id? true : false;
     const is_login = useSelector((state) => state.user.is_login);
     const preview = useSelector((state) => state.image.preview);
     const post_list = useSelector((state) => state.post.list);
+    const _comment_id = useSelector((state) => state.comment.list)
+    const comment_id = _comment_id.post_id;
+    
+    console.log(Object.keys(_comment_id));
+    console.log(_comment_id);
 
-    const post_id = props.match.params.id;
-    const is_edit = post_id? true : false;
-
-    const {history} = props;    
-
+    const {history} = props;
     let _post = is_edit? post_list.find((p) => p.id === post_id) : null;
 
     const [contents, setContents] = React.useState(_post? _post.contents : "");
@@ -48,8 +52,8 @@ const PostWrite = (props) => {
     }
     
     const deletePost = () => {
-        // dispatch(commentActions.deleteCommentFB(post_id));
-        dispatch(postActions.deletePostFB(post_id));
+        dispatch(commentActions.deleteCommentFB(post_id));
+        // dispatch(postActions.deletePostFB(post_id));
     }
 
     if(!is_login) {

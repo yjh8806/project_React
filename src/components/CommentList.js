@@ -2,14 +2,14 @@ import React from "react";
 import { Grid, Image, Text } from "../elements";
 
 import {useDispatch, useSelector} from "react-redux";
-import {actionCreators as commentActions} from "../redux/modules/comment";
+import comment, {actionCreators as commentActions} from "../redux/modules/comment";
 import post from "../redux/modules/post";
 
 const CommentList = (props) => {
     const dispatch = useDispatch();
     const comment_list = useSelector(state => state.comment.list);    
-    
     const {post_id} = props;
+    console.log(comment_list[post_id]);
 
     React.useEffect(() => {
         if(!comment_list[post_id]){
@@ -40,6 +40,8 @@ export default CommentList;
 const CommentItem = (props) => {
 
     const {user_profile, user_name, user_id, post_id, contents, insert_dt} = props;
+    console.log(props)
+    console.log(props.id)
     return (
         <Grid is_flex>
             <Grid is_flex width="auto">

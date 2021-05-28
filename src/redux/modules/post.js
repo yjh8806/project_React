@@ -161,7 +161,7 @@ const getPostFB = (start = null, size = 3) => {
 
         dispatch(loading(true));
         const postDB = firestore.collection("post");
-        
+
         let query = postDB.orderBy("insert_dt", "desc");
 
         if(start){

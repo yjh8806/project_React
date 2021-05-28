@@ -14,7 +14,7 @@ const LOADING = "LOADING";
 
 const setComment = createAction(SET_COMMENT, (post_id, comment_list) => ({post_id, comment_list}));
 const addComment = createAction(ADD_COMMENT, (post_id, comment) => ({post_id, comment}));
-const deleteComment = createAction(DELETE_COMMENT, (post_id, comment) => ({post_id, comment}));
+const deleteComment = createAction(DELETE_COMMENT, (post_id) => ({post_id}));
 
 const loading = createAction(LOADING, (is_loading) => ({ is_loading }));
 
@@ -37,6 +37,7 @@ const addCommentFB = (post_id, contents) => {
       insert_dt: moment().format("YYYY-MM-DD hh:mm:ss"),
     }
     console.log(commentDB);
+    console.log(getState().comment)
 
     commentDB
       .add(comment)
@@ -99,24 +100,23 @@ const getCommentFB = (post_id = null) => {
         docs.forEach((doc) => {
           list.push({...doc.data(), id: doc.id});
         })
-
         dispatch(setComment(post_id, list));
       }).catch(err => {
         console.log('댓글 정보를 가져올 수 없습니다.', err);
       });
   };
 };
-const deleteCommentFB = (post_id, comment) => {
+const deleteCommentFB = (post_id) => {
   return function (dispatch, getState, {history}) {
     const commentDB = firestore.collection("comment");
 
-    const _post_idx = getState().post.list.findIndex((p) => p.id === post_id);
-    const _post = getState().post.list[_post_idx];
-    const _comment_id = commentDB.id;
+    const comment_id = getState().comment.list[post_id]['id'];
 
-    commentDB.doc(comment).delete().then((doc) => {
+    commentDB.doc(comment_id).delete().then(() => {
       // console.log("Document successfully deleted!");
-        dispatch(deleteComment(post_id));
+        dispatch(deleteComment(post_id))
+        window.alert("댓글 삭제가 완료되었습니다.")
+        history.replace("/");
       }).catch((error) => {
           console.error("Error removing document: ", error);
       });
@@ -132,10 +132,8 @@ export default handleActions(
         draft.list[action.payload.post_id].unshift(action.payload.comment);
       }),
       [DELETE_COMMENT]: (state, action) => produce(state, (draft) => {
-        // const _post_idx = draft.list.findIndex((p) => p.id === action.payload.post_id);
-        // const _post = draft.list[_post_idx];
-        
-        draft.list.splice(0);
+
+        delete draft.comment.list[action.payload.list.post_id]
       }),
       [LOADING]: (state, action) => produce(state, (draft) => {
         draft.is_loading = action.payload.is_loading;
